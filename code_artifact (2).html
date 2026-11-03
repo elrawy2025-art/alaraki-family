@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تطبيق عائلة العركية بالإسماعيلية</title>
+    <!-- FontAwesome للأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- خط Cairo من Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ==========================================
+           1. النمط الأساسي والألوان الملكية
+           ========================================== */
+        :root {
+            --primary: #1b4332;       /* أخضر زيتي ملكي */
+            --primary-dark: #081c15;  /* أخضر داكن جداً */
+            --primary-light: #2d6a4f; /* أخضر فاتح */
+            --gold: #d4af37;          /* ذهبي دافئ */
+            --gold-light: #f3e5ab;    /* ذهبي فاتح */
+            --bg-light: #f8f9fa;      /* خلفية الصفحة */
+            --card-bg: #ffffff;       /* خلفية البطاقات */
+            --text-main: #212529;     /* لون النصوص الرئيسي */
+            --text-muted: #6c757d;    /* لون النصوص الفرعي */
+            --border-color: #e9ecef;  /* الحدود */
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            direction: rtl;
+            text-align: right;
+            padding-bottom: 70px; /* مساحة لشريط الموبايل السفلي */
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ==========================================
+           2. الهيدر وشريط الملاحة (Header & Navbar)
+           ========================================== */
+        header {
+            background-color: var(--primary);
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid var(--gold);
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-container {
+            max-w: 1200px;
+            margin: 0 auto;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-dark);
+            font-size: 22px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .logo-text h1 {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--gold-light);
+            line-height: 1.2;
+        }
+
+        .logo-text p {
+            font-size: 11px;
+            color: #d8f3dc;
+        }
+
+        /* قائمة الكمبيوتر */
+        nav.desktop-nav {
+            display: flex;
+            gap: 6px;
+        }
+
+        nav.desktop-nav button {
+            background: transparent;
+            border: none;
+            color: #e9ecef;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        nav.desktop-nav button:hover,
+        nav.desktop-nav button.active {
+            background-color: var(--primary-light);
+            color: var(--gold-light);
+        }
+
+        /* ==========================================
+           3. شريط التنقل السفلي للموبايل (Mobile Nav)
+           ========================================== */
+        .mobile-bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--primary-dark);
+            border-top: 2px solid var(--gold);
+            z-index: 1000;
+            padding: 6px 0;
+        }
+
+        .mobile-bottom-nav-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .mobile-bottom-nav button {
+            background: none;
+            border: none;
+            color: #adb5bd;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 10px;
+            font-weight: 600;
+            gap: 3px;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .mobile-bottom-nav button i {
+            font-size: 18px;
+        }
+
+        .mobile-bottom-nav button.active {
+            color: var(--gold);
+        }
+
+        /* ==========================================
+           4. الهيكل العام والمحتوى الرئيسي
+           ========================================== */
+        .main-container {
+            max-width: 1200px;
+            margin: 25px auto;
+            padding: 0 15px;
+        }
+
+        /* تحكم كامل بظهور وإخفاء الأقسام */
+        .page-section {
+            display: none; /* مخفي بصفة افتراضية */
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .page-section.active {
+            display: block; /* القسم النشط فقط يظهر */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* عناوين الأقسام */
+        .section-header {
+            margin-bottom: 20px;
+            border-right: 4px solid var(--gold);
+            padding-right: 12px;
+        }
+
+        .section-header h2 {
+            font-size: 22px;
+            color: var(--primary);
+            font-weight: 800;
+        }
+
+        .section-header p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* ==========================================
+           5. قسم الرئيسية (Home Section)
+           ========================================== */
+        .welcome-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 30px 20px;
+            text-align: center;
+            margin-bottom: 25px;
+            border: 1px solid var(--gold);
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-card h2 {
+            font-size: 24px;
+            color: var(--gold);
+            margin-bottom: 8px;
+            font-weight: 800;
+        }
+
+        .welcome-card p {
+            font-size: 14px;
+            color: #e9ecef;
+            max-width: 700px;
+            margin: 0 auto 15px auto;
+            line-height: 1.6;
+        }
+
+        /* شبكة الإحصائيات السريعة */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(212, 175, 55, 0.15);
+            color: var(--primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .stat-info h3 {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .stat-info p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* الأخبار */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-body {
+            padding: 18px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            background-color: var(--gold-light);
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+            align-self: flex-start;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+        }
+
+        .card-text {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .card-date {
+            font-size: 11px;
+            color: #adb5bd;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* ==========================================
+           6. قسم اللجان الهيكلية (Committees Section)
+           ========================================== */
+        /* مجلس الحكماء - الهيئة العليا */
+        .council-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 22px;
+            border: 2px solid var(--gold);
+            margin-bottom: 25px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .council-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .council-title h3 {
+            font-size: 20px;
+            color: var(--gold);
+            font-weight: 800;
+        }
+
+        .members-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 12px;
+        }
+
+        .member-item {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .member-info h4 {
+            font-size: 14px;
+            color: white;
+            font-weight: 700;
+        }
+
+        .member-info p {
+            font-size: 11px;
+            color: var(--gold-light);
+        }
+
+        /* أزرار التواصل */
+        .btn-group {
+            display: flex;
+            gap: 6px;
+        }
+
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: opacity 0.2s;
+        }
+
+        .btn-call {
+            background-color: var(--gold);
+            color: var(--primary-dark);
+        }
+
+        .btn-whatsapp {
+            background-color: #25d366;
+            color: white;
+        }
+
+        .btn-action:hover {
+            opacity: 0.85;
+        }
+
+        /* اللجان الفرعية 6 */
+        .sub-committees-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .committee-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            padding: 18px;
+        }
+
+        .committee-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .committee-icon {
+            width: 38px;
+            height: 38px;
+            background-color: var(--primary);
+            color: var(--gold);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .committee-header h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        /* ==========================================
+           7. أدوات التصفية والبحث (Filters & Search)
+           ========================================== */
+        .filter-box {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .search-input, .select-input {
+            padding: 10px 14px;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            font-size: 13px;
+            outline: none;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-input:focus, .select-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(27, 67, 50, 0.15);
+        }
+
+        /* ==========================================
+           8. الجداول ودليل الهواتف (Table & Directory)
+           ========================================== */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: right;
+            font-size: 13px;
+        }
+
+        th {
+            background-color: var(--primary);
+            color: var(--gold-light);
+            padding: 12px 15px;
+            font-weight: 700;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        tr:hover {
+            background-color: #f1f3f5;
+        }
+
+        /* ==========================================
+           9. الاستجابة للشاشات الصغيرة (Mobile Responsive)
+           ========================================== */
+        @media (max-width: 768px) {
+            nav.desktop-nav {
+                display: none; /* إخفاء قائمة الكمبيوتر */
+            }
+
+            .mobile-bottom-nav {
+                display: block; /* إظهار قائمة الموبايل السفلي */
+            }
+
+            .header-container {
+                justify-content: center;
+            }
+
+            .welcome-card h2 {
+                font-size: 20px;
+            }
+
+            .stat-card {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==========================================
+         الهيدر العلوي
+         ========================================== -->
+    <header>
+        <div class="header-container">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-tree"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>عائلة العركية بالإسماعيلية</h1>
+                    <p>الملتقى الرسمي لصلة الرحم والقرارات المباركة</p>
+                </div>
+            </div>
+
+            <!-- ملاحة أجهزة الكمبيوتر -->
+            <nav class="desktop-nav">
+                <button onclick="switchTab('home')" id="d-nav-home" class="active">الرئيسية</button>
+                <button onclick="switchTab('committees')" id="d-nav-committees">اللجان</button>
+                <button onclick="switchTab('decisions')" id="d-nav-decisions">القرارات</button>
+                <button onclick="switchTab('directory')" id="d-nav-directory">دليل التواصل</button>
+                <button onclick="switchTab('takaful')" id="d-nav-takaful">التكافل</button>
+                <button onclick="switchTab('events')" id="d-nav-events">المناسبات</button>
+                <button onclick="switchTab('honor')" id="d-nav-honor">المتميزون</button>
+                <button onclick="switchTab('contact')" id="d-nav-contact">تواصل معنا</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ==========================================
+         المحتوى الرئيسي للأقسام (Page Sections)
+         ========================================== -->
+    <main class="main-container">
+
+        <!-- 1. قسم الرئيسية -->
+        <section id="section-home" class="page-section active">
+            <div class="welcome-card">
+                <h2>أهلاً بكم في تطبيق عائلة العركية بالإسماعيلية</h2>
+                <p>منصة رقمية موحدة تجمع أبناء العائلة لتعزيز التكافل الاجتماعي، وتوثيق قرارات الاجتماعات، وتسهيل التواصل بين جميع الأفراد واللجان القائمة.</p>
+            </div>
+
+            <!-- بطاقات إحصائيات سريعة -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-sitemap"></i></div>
+                    <div class="stat-info">
+                        <h3>7 لجان</h3>
+                        <p>مجلس الحكماء + 6 لجان فرعية</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-gavel"></i></div>
+                    <div class="stat-info">
+                        <h3>18 قراراً</h3>
+                        <p>قرارات موثقة ومُعتمدة</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-hand-holding-heart"></i></div>
+                    <div class="stat-info">
+                        <h3>صندوق التكافل</h3>
+                        <p>دعم دائم للحالات والخدمات</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <h2>آخر الأخبار والمستجدات</h2>
+                <p>تغطية حية لأبرز فعاليات وأنشطة عائلة العركية</p>
+            </div>
+
+            <div class="news-grid">
+                <div class="card">
+                    <div class="card-body">
+                        <div>
+                            <span class="badge">اجتماعي</span>
+                            <h3 class="card-title">انعقاد الاجتماع الدوري لمجلس العائلة بالإسماعيلية</h3>
+                            <p class="card-text">تم بحمد الله عقد الاجتماع بمدينة الإسماعيلية لبحث آليات تطوير التكافل الاجتماعي ومتابعة أعمال اللجان التنفيذية.</p>
+                        </div>
+                        <div class="card-date"><i class="fa-regular fa-calendar"></i> 28 أكتوبر 2026</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div>
+                            <span class="badge">خدمات</span>
+                            <h3 class="card-title">متابعة صيانة وتظليل مقابر العائلة</h3>
+                            <p class="card-text">أنهت لجنة المقابر الإشراف على أعمال الترميم والتجديد والتظليل لخدمة جميع أبناء العائلة.</p>
+                        </div>
+                        <div class="card-date"><i class="fa-regular fa-calendar"></i> 15 أكتوبر 2026</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div>
+                            <span class="badge">تفوق علمي</span>
+                            <h3 class="card-title">فتح باب التقديم لتكريم المتفوقين</h3>
+                            <p class="card-text">تعلن لجنة الشباب عن فتح باب استقبال شهادات المتفوقين لإدراجهم في حفل التكريم السنوي.</p>
+                        </div>
+                        <div class="card-date"><i class="fa-regular fa-calendar"></i> 01 أكتوبر 2026</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. قسم اللجان الهيكلية -->
+        <section id="section-committees" class="page-section">
+            <div class="section-header">
+                <h2>الهيكل التنظيمي ولجان العائلة</h2>
+                <p>مجلس الحكماء (اللجنة العليا) والـ 6 لجان الفرعية المنبثقة</p>
+            </div>
+
+            <!-- مجلس الحكماء - اللجنة العليا -->
+            <div class="council-card">
+                <div class="council-title">
+                    <i class="fa-solid fa-crown" style="color: var(--gold); font-size: 24px;"></i>
+                    <div>
+                        <h3>مجلس الحكماء (اللجنة العليا)</h3>
+                        <p style="font-size: 12px; opacity: 0.9;">المرجعية العليا لاعتماد القرارات ورسم السياسات العامة للعائلة</p>
+                    </div>
+                </div>
+
+                <div class="members-grid">
+                    <div class="member-item">
+                        <div class="member-info">
+                            <h4>الشيخ / أحمد العركي</h4>
+                            <p>رئيس مجلس الحكماء</p>
+                        </div>
+                        <div class="btn-group">
+                            <a href="tel:01000000001" class="btn-action btn-call" title="اتصال"><i class="fa-solid fa-phone"></i></a>
+                            <a href="https://wa.me/201000000001" target="_blank" class="btn-action btn-whatsapp" title="واتساب"><i class="fa-brands fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="member-item">
+                        <div class="member-info">
+                            <h4>أ.د / محمد العركي</h4>
+                            <p>نائب رئيس المجلس</p>
+                        </div>
+                        <div class="btn-group">
+                            <a href="tel:01000000002" class="btn-action btn-call" title="اتصال"><i class="fa-solid fa-phone"></i></a>
+                            <a href="https://wa.me/201000000002" target="_blank" class="btn-action btn-whatsapp" title="واتساب"><i class="fa-brands fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="member-item">
+                        <div class="member-info">
+                            <h4>الحاج / الشافعي العركي</h4>
+                            <p>عضو الهيئة العليا</p>
+                        </div>
+                        <div class="btn-group">
+                            <a href="tel:01000000003" class="btn-action btn-call" title="اتصال"><i class="fa-solid fa-phone"></i></a>
+                            <a href="https://wa.me/201000000003" target="_blank" class="btn-action btn-whatsapp" title="واتساب"><i class="fa-brands fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- اللجان الفرعية الـ 6 -->
+            <div class="sub-committees-grid">
+                <!-- 1. لجنة المقابر -->
+                <div class="committee-card">
+                    <div class="committee-header">
+                        <div class="committee-icon"><i class="fa-solid fa-place-of-worship"></i></div>
+                        <div>
+                            <h3>1. لجنة المقابر</h3>
+                            <p style="font-size: 11px; color: var(--text-muted);">إدارة وتصاوين وصيانة المقابر</p>
+                        </div>
+                    </div>
+                    <div class="member-item" style="background: #f8f9fa; border: 1px solid var(--border-color);">
+                        <div class="member-info">
+                            <h4 style="color: var(--text-main);">الحاج / محمود العركي</h4>
+                            <p style="color: var(--primary);">مقرر لجنة المقابر</p>
+                        </div>
+                        <div class="btn-group">
+                            <a href="tel:01000000004" class="btn-action btn-call"><i class="fa-solid fa-phone"></i></a>
+                            <a href="https://wa.me/201000000004" target="_blank" class="btn-action btn-whatsapp"><i class="fa-brands fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. اللجنة المالية -->
+                <div class="committee-card">
+                    <div class="committee-header">
+                        <div class="committee-icon"><i class="fa-solid fa-wallet"></i></div>
+                        <div>
+                            <h3>2. اللجنة المالية</h3>
+                            <p style="font-size: 11px; color: var(--text-muted);">إدارة الاشتراكات والميزانية والتكافل</p>
+                        </div>
+                    </div>
+                    <div class="member-item" style="background: #f8f9fa; border: 1px solid var(--border-color);">
+                        <div class="member-info">
+                            <h4 style="color: var(--text-main);">أ / إبراهيم العركي</h4>
+                            <p style="color: var(--primary);">أمين الصندوق والمالية</p>
+                        </div>
+                        <div class="btn-group">
+                            <a href="tel:01000000005" class="btn-action btn-call"><i class="fa-solid fa-phone"></i></a>
+                            <a href="https://wa.me/201000000005" target="_blank" class="btn-action btn-whatsapp"><i class="fa-brands fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. اللجنة الاجتماعية والتكافل -->
+                <div class="committee-card">
+                    <div class="committee-header">
+                        <div class="committee-icon"><i class="fa-solid fa-hand-holding-heart"></i></div>
+                        <div>
+                            <h3>3. اللجنة الاجتماعية والتكافل</h3>
+                            <p style="font-size: 11px; color: var(--text-muted);">رعاية الأسر والدعم المباشر والمواساة</p>
+                        </div>
+                    </div>
+                    <div class="member-item" style="background: #f8f9fa; border: 1px solid var(--border-color);">
+                        <div class="member-info">
+                            <h4 style="color: var(--text-main);">م / طارق العركي</h4>
+                            <p style="color: var(--primary);">مقرر اللجنة الاجتماعية</p>
+                        </div>
+                        <div class="btn-group">
+                            <a href="tel:01000000006" class="btn-action btn-call"><i class="fa-solid fa-phone"></i></a>
+                            <a href="https://wa.me/201000000006" target="_blank" class="btn-action btn-whatsapp"><i class="fa-brands fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. اللجنة الإعلامية -->
+                <div class="committee-card">
+                    <div class="committee-header">
+                        <div class="committee-icon"><i class="fa-solid fa-bullhorn"></i></div>
+                        <div>
+                            <h3>4. اللجنة الإعلامية</h3>
+                            <p style="font-size: 11px; color: var(--text-muted);">إدارة التطبيق، التوثيق والأخبار</p>
+                        </div>
+                    </div>
+                    <div class="member-item" style="background: #f8f9fa; border: 1px solid var(--border-color);">
+                        <div class="member-info">
+                            <h4 style="color: var(--text-main);">أ / هاني العركي</h4>
+                            <p style="color: var(--primary);">المسؤول الإعلامي والتكنولوجي</p>
+                        </div>
+                        <div class="btn-group">
+                            <a href="tel:01000000007" class="btn-action btn-call"><i class="fa-solid fa-phone"></i></a>
+                            <a href="https://wa.me/201000000007" target="_blank" class="btn-action btn-whatsapp"><i class="fa-brands fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. لجنة الشباب -->
+                <div class="committee-card">
+                    <div class="committee-header">
+                        <div class="committee-icon"><i class="fa-solid fa-user-graduate"></i></div>
+                        <div>
+                            <h3>5. لجنة الشباب</h3>
+                            <p style="font-size: 11px; color: var(--text-muted);">الفعاليات الرياضية، الثقافية والتكريم</p>
+                        </div>
+                    </div>
+                    <div class="member-item" style="background: #f8f9fa; border: 1px solid var(--border-color);">
+                        <div class="member-info">
+                            <h4 style="color: var(--text-main);">م / عمر العركي</h4>
+                            <p style="color: var(--primary);">مقرر لجنة الشباب</p>
+                        </div>
+                        <div class="btn-group">
+                            <a href="tel:01000000008" class="btn-action btn-call"><i class="fa-solid fa-phone"></i></a>
+                            <a href="https://wa.me/201000000008" target="_blank" class="btn-action btn-whatsapp"><i class="fa-brands fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. لجنة العلاقات العامة وفض المنازعات -->
+                <div class="committee-card">
+                    <div class="committee-header">
+                        <div class="committee-icon"><i class="fa-solid fa-handshake"></i></div>
+                        <div>
+                            <h3>6. العلاقات العامة وفض المنازعات</h3>
+                            <p style="font-size: 11px; color: var(--text-muted);">التوفيق الودي والتواصل الخارجي</p>
+                        </div>
+                    </div>
+                    <div class="member-item" style="background: #f8f9fa; border: 1px solid var(--border-color);">
+                        <div class="member-info">
+                            <h4 style="color: var(--text-main);">الشيخ / سلامة العركي</h4>
+                            <p style="color: var(--primary);">مقرر لجنة التحكيم والعلاقات</p>
+                        </div>
+                        <div class="btn-group">
+                            <a href="tel:01000000009" class="btn-action btn-call"><i class="fa-solid fa-phone"></i></a>
+                            <a href="https://wa.me/201000000009" target="_blank" class="btn-action btn-whatsapp"><i class="fa-brands fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. قسم قرارات الاجتماعات -->
+        <section id="section-decisions" class="page-section">
+            <div class="section-header">
+                <h2>قرارات وتوصيات الاجتماعات</h2>
+                <p>سجل شفاف وموثق لجميع القرارات المعتمدة</p>
+            </div>
+
+            <!-- شريط التصفية والبحث -->
+            <div class="filter-box">
+                <input type="text" id="decision-search" onkeyup="filterDecisions()" placeholder="بحث في القرارات..." class="search-input">
+                <select id="decision-filter" onchange="filterDecisions()" class="select-input">
+                    <option value="all">جميع الجهات الصادرة</option>
+                    <option value="مجلس الحكماء">مجلس الحكماء (اللجنة العليا)</option>
+                    <option value="اللجنة المالية">اللجنة المالية</option>
+                    <option value="لجنة المقابر">لجنة المقابر</option>
+                    <option value="فض المنازعات">العلاقات العامة وفض المنازعات</option>
+                </select>
+            </div>
+
+            <div id="decisions-list" style="display: flex; flex-direction: column; gap: 15px;">
+                <div class="card decision-item" data-committee="اللجنة المالية" style="padding: 18px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 8px;">
+                        <h3 style="font-size: 16px; color: var(--primary-dark); font-weight: 700;">قرار رقم (1): تحديد قيمة الاشتراك الشهري لصندوق التكافل</h3>
+                        <span class="badge" style="background-color: #e2e3e5; color: #383d41;">15 سبتمبر 2026</span>
+                    </div>
+                    <p class="card-text">اعتماد مبلغ اشتراك شهري قدره 50 جنيهاً لكل رب أسرة قادر لتغذية صندوق التكافل المخصص للحالات الطارئة والخدمات العامة.</p>
+                    <div style="font-size: 12px; color: var(--primary); font-weight: 700; border-t: 1px solid var(--border-color); padding-top: 8px;">
+                        الجهة الصادرة: اللجنة المالية
+                    </div>
+                </div>
+
+                <div class="card decision-item" data-committee="مجلس الحكماء" style="padding: 18px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 8px;">
+                        <h3 style="font-size: 16px; color: var(--primary-dark); font-weight: 700;">قرار رقم (2): الاعتماد الرسمي للهيكل التنظيمي والـ 6 لجان</h3>
+                        <span class="badge" style="background-color: #e2e3e5; color: #383d41;">01 أغسطس 2026</span>
+                    </div>
+                    <p class="card-text">اعتماد الهيكل التنظيمي الجديد تحت قيادة مجلس الحكماء وتحديد مهام واختصاصات الـ 6 لجان الفرعية.</p>
+                    <div style="font-size: 12px; color: var(--primary); font-weight: 700; border-t: 1px solid var(--border-color); padding-top: 8px;">
+                        الجهة الصادرة: مجلس الحكماء (اللجنة العليا)
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. قسم دليل التواصل العائلي -->
+        <section id="section-directory" class="page-section">
+            <div class="section-header">
+                <h2>دليل أفراد العائلة بالإسماعيلية</h2>
+                <p>قائمة الهواتف ومحل الإقامة للربط والتواصل الأخوي</p>
+            </div>
+
+            <div class="filter-box">
+                <input type="text" id="directory-search" onkeyup="filterDirectory()" placeholder="ابحث بالاسم أو المهنة أو الفرع..." class="search-input">
+            </div>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>الاسم الكافي</th>
+                            <th>الفرع / البيت</th>
+                            <th>المهنة / الصفة</th>
+                            <th>محل الإقامة</th>
+                            <th style="text-align: center;">التواصل</th>
+                        </tr>
+                    </thead>
+                    <tbody id="directory-tbody">
+                        <tr class="dir-row">
+                            <td style="font-weight: 700;">د / علي حسن العركي</td>
+                            <td>بيت الشريف</td>
+                            <td>استشاري جراحة</td>
+                            <td>الإسماعيلية - حي الأشجار</td>
+                            <td style="text-align: center;">
+                                <div class="btn-group" style="justify-content: center;">
+                                    <a href="tel:01111111111" class="btn-action btn-call"><i class="fa-solid fa-phone"></i></a>
+                                    <a href="https://wa.me/20111111111" target="_blank" class="btn-action btn-whatsapp"><i class="fa-brands fa-whatsapp"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="dir-row">
+                            <td style="font-weight: 700;">أ.د / محمود سالم العركي</td>
+                            <td>بيت الشافعي</td>
+                            <td>أستاذ جامعي</td>
+                            <td>الإسماعيلية - الشيخ زايد</td>
+                            <td style="text-align: center;">
+                                <div class="btn-group" style="justify-content: center;">
+                                    <a href="tel:01222222222" class="btn-action btn-call"><i class="fa-solid fa-phone"></i></a>
+                                    <a href="https://wa.me/20122222222" target="_blank" class="btn-action btn-whatsapp"><i class="fa-brands fa-whatsapp"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="dir-row">
+                            <td style="font-weight: 700;">م / خالد يوسف العركي</td>
+                            <td>بيت الفاضل</td>
+                            <td>مهندس برمجيات</td>
+                            <td>الإسماعيلية - أ Doqs</td>
+                            <td style="text-align: center;">
+                                <div class="btn-group" style="justify-content: center;">
+                                    <a href="tel:01333333333" class="btn-action btn-call"><i class="fa-solid fa-phone"></i></a>
+                                    <a href="https://wa.me/20133333333" target="_blank" class="btn-action btn-whatsapp"><i class="fa-brands fa-whatsapp"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 5. قسم صندوق التكافل -->
+        <section id="section-takaful" class="page-section">
+            <div class="section-header">
+                <h2>صندوق التكافل الاجتماعي والطوارئ</h2>
+                <p>مؤشرات الشفافية ورصيد المساعدات والدعم الأخوي</p>
+            </div>
+
+            <div class="welcome-card" style="background: linear-gradient(135deg, #0d3b66 0%, #001d3d 100%);">
+                <h2 style="color: #4cc9f0;">حالة الصندوق والشفافية المالية</h2>
+                <p>يتم توجيه جميع الاشتراكات والمساهمات لدعم الحالات الصحية الطارئة، ومساعدة الشباب، وصيانة المنشآت الخدمية للعائلة.</p>
+                <div style="font-size: 28px; font-weight: 800; color: var(--gold); margin-top: 10px;">
+                    145,000 ج.م <span style="font-size: 14px; color: white;">إجمالي المساهمات هذا العام</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. قسم المناسبات -->
+        <section id="section-events" class="page-section">
+            <div class="section-header">
+                <h2>أجندة المناسبات والفاعليات</h2>
+                <p>أفراح، اجتماعات ومواساة أبناء العائلة بالإسماعيلية</p>
+            </div>
+
+            <div class="news-grid">
+                <div class="card" style="padding: 18px; border-right: 4px solid var(--gold);">
+                    <div style="display: flex; gap: 15px; align-items: center;">
+                        <div style="background-color: var(--primary); color: var(--gold); padding: 12px 18px; border-radius: 10px; text-align: center;">
+                            <span style="display: block; font-size: 20px; font-weight: 800;">15</span>
+                            <span style="font-size: 11px;">نوفمبر</span>
+                        </div>
+                        <div>
+                            <span class="badge">اجتماع عمومي</span>
+                            <h3 style="font-size: 15px; font-weight: 700;">اللقاء السنوي لأبناء العائلة بالإسماعيلية</h3>
+                            <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">ديوان العائلة - الساعة 4:00 عصراً</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. قسم لوحة الشرف -->
+        <section id="section-honor" class="page-section">
+            <div class="section-header">
+                <h2>لوحة الشرف والمتميزين</h2>
+                <p>فخر العائلة من حملة الشهادات العليا والمتفوقين</p>
+            </div>
+
+            <div class="news-grid">
+                <div class="card" style="padding: 20px; text-align: center;">
+                    <div style="width: 70px; height: 70px; background: var(--gold-light); color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 12px auto; border: 2px solid var(--gold);">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <h3 style="font-size: 16px; font-weight: 700;">د / سارة محمد العركي</h3>
+                    <p style="font-size: 13px; color: var(--primary); font-weight: 600;">الدكتوراه في الذكاء الاصطناعي</p>
+                    <p style="font-size: 11px; color: var(--text-muted); margin-top: 5px;">جامعة قناة السويس - 2026</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. قسم تواصل معنا -->
+        <section id="section-contact" class="page-section">
+            <div class="section-header">
+                <h2>تواصل معنا والاقتراحات</h2>
+                <p>إرسال الاقتراحات والاستفسارات مباشرة إلى مجلس العائلة</p>
+            </div>
+
+            <div class="card" style="padding: 20px; max-width: 600px; margin: 0 auto;">
+                <form onsubmit="handleFormSubmit(event)">
+                    <div style="margin-bottom: 12px;">
+                        <label style="display: block; font-size: 12px; font-weight: 700; margin-bottom: 5px;">الاسم الكريم</label>
+                        <input type="text" required class="search-input" style="width: 100%;">
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <label style="display: block; font-size: 12px; font-weight: 700; margin-bottom: 5px;">رقم الهاتف</label>
+                        <input type="tel" required class="search-input" style="width: 100%;">
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-size: 12px; font-weight: 700; margin-bottom: 5px;">نص الرسالة أو الاقتراح</label>
+                        <textarea rows="4" required class="search-input" style="width: 100%; resize: none;"></textarea>
+                    </div>
+                    <button type="submit" style="width: 100%; background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 700; cursor: pointer;">
+                        إرسال الرسالة
+                    </button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==========================================
+         شريط الملاحة السفلي للموبايل (Mobile Only)
+         ========================================== -->
+    <div class="mobile-bottom-nav">
+        <div class="mobile-bottom-nav-container">
+            <button onclick="switchTab('home')" id="m-nav-home" class="active">
+                <i class="fa-solid fa-house"></i>
+                <span>الرئيسية</span>
+            </button>
+            <button onclick="switchTab('committees')" id="m-nav-committees">
+                <i class="fa-solid fa-sitemap"></i>
+                <span>اللجان</span>
+            </button>
+            <button onclick="switchTab('decisions')" id="m-nav-decisions">
+                <i class="fa-solid fa-gavel"></i>
+                <span>القرارات</span>
+            </button>
+            <button onclick="switchTab('directory')" id="m-nav-directory">
+                <i class="fa-solid fa-address-book"></i>
+                <span>الدليل</span>
+            </button>
+            <button onclick="switchTab('contact')" id="m-nav-contact">
+                <i class="fa-solid fa-paper-plane"></i>
+                <span>تواصل</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         JAVASCRIPT المباشر والبسيط للتبديل والفلترة
+         ========================================== -->
+    <script>
+        // الوظيفة الرئيسية المضمونة للتبديل بين الأقسام
+        function switchTab(tabId) {
+            // 1. إخفاء جميع الأقسام
+            var sections = document.querySelectorAll('.page-section');
+            for (var i = 0; i < sections.length; i++) {
+                sections[i].classList.remove('active');
+            }
+
+            // 2. إزالة حالة التفعيل من أزرار القائمة العلوي والسفلية
+            var desktopBtns = document.querySelectorAll('nav.desktop-nav button');
+            for (var j = 0; j < desktopBtns.length; j++) {
+                desktopBtns[j].classList.remove('active');
+            }
+
+            var mobileBtns = document.querySelectorAll('.mobile-bottom-nav button');
+            for (var k = 0; k < mobileBtns.length; k++) {
+                mobileBtns[k].classList.remove('active');
+            }
+
+            // 3. إظهار القسم المطلوب
+            var targetSection = document.getElementById('section-' + tabId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+
+            // 4. تفعيل أزرار التنقل المرتبطة بالقسم
+            var activeDesktopBtn = document.getElementById('d-nav-' + tabId);
+            if (activeDesktopBtn) {
+                activeDesktopBtn.classList.add('active');
+            }
+
+            var activeMobileBtn = document.getElementById('m-nav-' + tabId);
+            if (activeMobileBtn) {
+                activeMobileBtn.classList.add('active');
+            }
+
+            // 5. التمرير لأعلى الصفحة
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // تصفية القرارات
+        function filterDecisions() {
+            var searchVal = document.getElementById('decision-search').value.toLowerCase();
+            var selectVal = document.getElementById('decision-filter').value;
+            var items = document.querySelectorAll('.decision-item');
+
+            for (var i = 0; i < items.length; i++) {
+                var text = items[i].innerText.toLowerCase();
+                var committee = items[i].getAttribute('data-committee');
+
+                var matchSearch = text.indexOf(searchVal) !== -1;
+                var matchSelect = (selectVal === 'all') || (committee === selectVal);
+
+                if (matchSearch && matchSelect) {
+                    items[i].style.display = 'block';
+                } else {
+                    items[i].style.display = 'none';
+                }
+            }
+        }
+
+        // تصفية دليل التواصل
+        function filterDirectory() {
+            var searchVal = document.getElementById('directory-search').value.toLowerCase();
+            var rows = document.querySelectorAll('.dir-row');
+
+            for (var i = 0; i < rows.length; i++) {
+                var text = rows[i].innerText.toLowerCase();
+                if (text.indexOf(searchVal) !== -1) {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+        }
+
+        // إرسال نموذج التواصل
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            alert('تم استلام رسالتك بنجاح وسيتواصل معك أحد أعضاء اللجنة التنفيذية في أقرب وقت.');
+            event.target.reset();
+        }
+    </script>
+</body>
+</html>
